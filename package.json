@@ -1,0 +1,36 @@
+{
+  "name": "mcp-root",
+  "version": "1.0.0",
+  "description": "mcp root",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest",
+    "build": "pnpm -r build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@9.15.0",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.16.0",
+    "typescript": "^5.8.3",
+    "zod": "^4.0.8",
+    "zod-to-json-schema": "^3.24.6"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.31.0",
+    "@types/node": "^24.1.0",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
+    "eslint": "^9.31.0",
+    "eslint-plugin-import": "^2.32.0",
+    "rimraf": "^6.0.1",
+    "vitest": "^3.2.4"
+  }
+}
