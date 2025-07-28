@@ -4,7 +4,10 @@ import { zodToJsonSchema } from 'zod-to-json-schema';
 
 import { tools } from './all-tools.js';
 
-
+/**
+ * 使用Server创建服务器
+ * 注册工具 setRequestHandler
+ */
 export async function createServer({ name, version }: { name: string, version: string }) {
   const server = new Server({
     name,

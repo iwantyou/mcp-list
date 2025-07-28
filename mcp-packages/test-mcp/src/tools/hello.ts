@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export const helloTool = defineTool({
   name: 'say_hello',
-  description: `向人说hello, input: { name: string }`,
+  description: `向人说hello`,
   annotations: {
     title: 'du_hello',
   },

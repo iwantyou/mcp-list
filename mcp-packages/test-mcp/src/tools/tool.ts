@@ -6,14 +6,17 @@ type Schema = z.Schema
 
 type ToolHandleResult = { content?: (ImageContent | TextContent)[] }
 
-interface ToolDefinition<T extends Schema = Schema> {
+export interface ToolDefinition<T extends Schema = Schema> {
     name: string;
     description: string;
     annotations: {
         title: string;
+        readOnlyHint?: boolean;
+        destructiveHint?: boolean;
+        openWorldHint?: boolean;
     }
     schema: T
-    handle: (args: z.output<T>) => Promise<ToolHandleResult>;
+    handle: (args: z.output<T>) => ToolHandleResult | Promise<ToolHandleResult>;
 }
 
 function defineTool<T extends Schema>(tool: ToolDefinition<T>): ToolDefinition<T> {
