@@ -15,13 +15,22 @@ export async function createServer({ name, version }: { name: string, version: s
     }
   });
   server.setRequestHandler(ListToolsRequestSchema, async () => {
-    console.log('所有工具', tools.map(t => t.name));
     return {
-      tools: tools.map(tool => ({
-        name: tool.name,
-        description: tool.description,
-        inputSchema: zodToJsonSchema(tool.schema),
-      }))
+      tools: tools.map(tool =>   {
+        console.log('json:', zodToJsonSchema(tool.schema));
+
+        return {
+          name: tool.name,
+          description: tool.description,
+          inputSchema: zodToJsonSchema(tool.schema),
+          annotations: {
+            title: tool.annotations.title,
+            readOnlyHint: true,
+            destructiveHint: true,
+            openWorldHint: true,
+          },
+        };
+      })
     };
   });
 

@@ -1,5 +1,5 @@
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-// import { createServer } from './server.js';
+import { createServer } from './server.js';
 import { createMcpServer } from './mcp.js';
 
 import path from 'node:path';
@@ -11,7 +11,7 @@ const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.
 
 export async function main() {
   try {
-    const server = await createMcpServer({ name: packageJson.name, version: packageJson.version });
+    const server = await createServer({ name: packageJson.name, version: packageJson.version });
     await server.connect(new StdioServerTransport());
     console.error(`启动成功 <====> version: ${packageJson.version}`);
   } catch (error) {

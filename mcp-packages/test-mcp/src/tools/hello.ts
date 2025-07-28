@@ -2,17 +2,17 @@ import { defineTool } from './tool.js';
 import { z } from 'zod';
 
 export const helloTool = defineTool({
-  name: 'du_hello',
-  description: 'A hello tool',
+  name: 'say_hello',
+  description: `向人说hello, input: { name: string }`,
   annotations: {
     title: 'du_hello',
   },
   schema: z.object({
-    name: z.string(),
+    name: z.string().describe('名字'),
   }),
-  handle: async args => {
+  handle: async ({ name }) => {
     return {
-      content: [{ type: 'text', text: `Hello, 当前参数为 -> ${JSON.stringify(args.name)}!` }],
+      content: [{ type: 'text', text: `Hello, 你真是个大聪明 ${name}!` }],
     };
   },
 });
