@@ -1,5 +1,4 @@
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-// import { createServer } from './server.js';
 import { createMcpServer } from './mcpServer.js';
 import { createLogger } from './logger.js';
 

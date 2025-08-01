@@ -11,6 +11,9 @@ importers:
       '@modelcontextprotocol/sdk':
         specifier: ^1.16.0
         version: 1.16.0
+      cac:
+        specifier: ^6.7.14
+        version: 6.7.14
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -51,9 +54,25 @@ importers:
 
   mcp-packages/test-mcp:
     dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.16.0
+        version: 1.16.0
       node-fetch:
         specifier: ^3.3.2
         version: 3.3.2
+      zod:
+        specifier: ^3.23.8
+        version: 3.25.76
+    devDependencies:
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.0.1
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.4(@types/node@24.1.0)
 
 packages:
 

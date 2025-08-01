@@ -3,10 +3,7 @@ import { ListToolsRequestSchema, CallToolRequestSchema } from '@modelcontextprot
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { tools } from './all-tools.js';
 import { createLogger } from './logger.js';
-/**
- * 高级Server创建服务器
- * 注册工具 setRequestHandler
- */
+
 async function createMcpServer({ name, version, logger }: { name: string, version: string, logger: ReturnType<typeof createLogger> }) {
   logger.info(`创建 MCP 服务器: ${name} v${version}`);
 
