@@ -23,7 +23,6 @@ export type StartServerOptions = PortAndHostOptions & Implementation;
 
 const handleSseRequest = async (req: IncomingMessage, res: ServerResponse, url: URL, sessionMaps: Map<string, SSEServerTransport>) => {
   if (req.method === 'POST') {
-    const url = new URL(req.url!, 'http://localhost:2000');
     const sessionId = url.searchParams.get('sessionId');
     if (!sessionId) {
       res.statusCode = 400;
