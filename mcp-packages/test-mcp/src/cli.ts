@@ -1,6 +1,5 @@
 import { cac } from 'cac';
-import { startServer as startSseServer } from './server.js';
-import { main } from './index.js';
+import { createStdioPipe, startSseServer } from './index.js';
 import { packageJson } from './package.js';
 
 const cli = cac(packageJson.name || 'cli').version(packageJson.version);
@@ -26,7 +25,7 @@ cli.command('sse').option('-p, --port <port>', 'port', {
 });
 
 cli.command('stdio').action(async () => {
-  await main();
+  await createStdioPipe();
 });
 
 

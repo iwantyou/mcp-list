@@ -1,23 +1,15 @@
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { ListToolsRequestSchema, CallToolRequestSchema  } from '@modelcontextprotocol/sdk/types.js';
 import type { Implementation } from '@modelcontextprotocol/sdk/types.js';
-import { zodToJsonSchema } from 'zod-to-json-schema';
 import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
 import http from 'node:http';
 import type { Server as HttpServer, IncomingMessage, ServerResponse } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import assert from 'node:assert';
 import { packageJson } from './package.js';
+import { createMcpServer } from './mcpServer.js';
+import { createLogger } from './logger.js';
 
-import { tools } from './all-tools.js';
 
-const colorInfo = {
-  RED: '\x1b[31m',
-  GREEN: '\x1b[32m',
-  YELLOW: '\x1b[33m',
-  NC: '\x1b[0m',
-};
-
+const logger = createLogger('SSE_SERVER');
 
 export type StartServerOptions = PortAndHostOptions & Implementation;
 
@@ -37,13 +29,14 @@ const handleSseRequest = async (req: IncomingMessage, res: ServerResponse, url: 
     }
 
   } else if (req.method === 'GET') {
-    const mcpServer = await createServer({
+    const mcpServer = await createMcpServer({
       name: packageJson.name,
       version: packageJson.version,
+      logger
     });
 
     res.on('close', () => {
-      console.log(`${colorInfo.YELLOW}sse 连接关闭${colorInfo.NC}`);
+      logger.warn('sse 连接关闭');
       sessionMaps.delete(transport.sessionId);
     });
 
@@ -54,7 +47,7 @@ const handleSseRequest = async (req: IncomingMessage, res: ServerResponse, url: 
 };
 
 
-export const startServer = async (options: PortAndHostOptions) => {
+export const startSseServer = async (options: PortAndHostOptions) => {
   try {
     const server = await createHttpServer(options);
 
@@ -70,72 +63,13 @@ export const startServer = async (options: PortAndHostOptions) => {
     return server;
 
   } catch (error) {
-    console.error(`${colorInfo.RED}服务启动失败: ${error instanceof Error ? error.message : error}${colorInfo.NC}`);
+    logger.error(`服务启动失败: ${error instanceof Error ? error.message : error}`);
     process.exit(1);
   }
 
 
 };
 
-/**
- * 使用Server创建服务器
- * 注册工具 setRequestHandler
- */
-export async function createServer({ name, version }: { name: string, version: string }) {
-  const server = new Server({
-    name,
-    version,
-  }, {
-    capabilities: {
-      tools: {}
-    }
-  });
-  server.setRequestHandler(ListToolsRequestSchema, async () => {
-    return {
-      tools: tools.map(tool =>   {
-        console.log('json:', zodToJsonSchema(tool.schema));
-
-        return {
-          name: tool.name,
-          description: tool.description,
-          inputSchema: zodToJsonSchema(tool.schema),
-          annotations: {
-            title: tool.annotations.title,
-            readOnlyHint: true,
-            destructiveHint: true,
-            openWorldHint: true,
-          },
-        };
-      })
-    };
-  });
-
-  server.setRequestHandler(CallToolRequestSchema, async request => {
-    const { name: toolName, arguments: args } = request.params;
-    console.log('调用工具:', toolName, 'with args:', args);
-
-    const tool = tools.find(tool => tool.name === toolName);
-    if (!tool) {
-      console.log('工具不存在:', toolName);
-      return Promise.resolve({
-        content: [{ type: 'text', text: `Unknown tool: ${toolName}` }]
-      });
-    }
-
-    try {
-      const result = await tool.handle(tool.schema.parse(args));
-      console.log('工具返回结果:', result);
-      return result;
-    } catch (error) {
-      console.error('工具错误:', error);
-      return {
-        content: [{ type: 'text', text: `Error: ${error}` }]
-      };
-    }
-  });
-
-  return server;
-}
 
 interface PortAndHostOptions {
   host?: string;
@@ -164,15 +98,13 @@ function printServerInfo(address: string | AddressInfo | null) {
       resolveHost = 'localhost';
     const successTip = '启动服务成功:  ';
     const logInfo = [
-      colorInfo.GREEN,
       successTip,
       `http://${resolveHost}:${reslovePort}\n`,
       'cursor config: ',
       JSON.stringify({
         'custome-mcp': `http://${resolveHost}:${reslovePort}/sse`,
       }, null, 2),
-      colorInfo.NC
     ].join('');
-    console.log(logInfo);
+    logger.info(logInfo);
   }
 }
