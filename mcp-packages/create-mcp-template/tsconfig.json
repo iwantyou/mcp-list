@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "./dist",
+    "noImplicitAny": false,
+    "allowJs": true,
+    "checkJs": false,
+    "composite": true,
+    "tsBuildInfoFile": "./dist/build-info/tsconfig.tsbuildinfo"
+  },
+  "files": ["src/cli.ts"],
+  "exclude": ["template", "template/**/*", "**/template/**", "**/template"]
+}

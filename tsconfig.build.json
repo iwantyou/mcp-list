@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "./dist",
+    "rootDir": "./scripts",
+    "tsBuildInfoFile": "./dist/build-info/tsconfig.tsbuildinfo"
+  },
+  "include": [],
+  "references": [
+    {
+      "path": "./mcp-packages/create-mcp-template"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@zh-mcp/create-mcp-template",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "",
+  "bin": {
+    "create-mcp-template": "cli.js",
+    "zmc": "cli.js"
+  },
+  "main": "dist/cli.js",
+  "files": [
+    "template",
+    "dist",
+    "cli.js"
+  ],
+  "scripts": {
+    "build": "rimraf dist && tsc -b",
+    "dev": "tsc -b --watch",
+    "start": "node cli.js",
+    "clean": "rimraf dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
