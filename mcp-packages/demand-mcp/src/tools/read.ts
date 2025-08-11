@@ -1,9 +1,10 @@
 import { defineTool } from './tool.js';
 import { z } from 'zod';
+import { readContentPrompt } from '../prompts/readContent.js';
 
 export const readTool = defineTool({
   name: 'read',
-  description: '读取知乎需求链接',
+  description: '读取知乎需求链接,提取需求内容',
   schema: z.object({
     url: z.string(),
   }),
@@ -25,9 +26,9 @@ export const readTool = defineTool({
         ]
       };
     }
-    const response = await fetch(`https://one.in.zhihu.com/api/v2/rfc/query?id=${id}`, {
+    const response = await fetch(`${process.env.ZHIHU_API_BASE_URL}/rfc/query?id=${id}`, {
       headers: {
-        'Authorization': 'Bearer d1996f123a5f33696ae81e2419e290c6',
+        'Authorization': `Bearer ${process.env.ZHIHU_API_TOKEN}`,
         'accept': 'application/json',
       } });
 
@@ -45,63 +46,9 @@ export const readTool = defineTool({
       }
       const { wikiPage, url: wikiUrl } = responseData.data || {};
 
-      // 构建分析内容
-      const analysisContent = [`# Role:
-资深测试工程师
-
-## Goals:
-将模糊的需求，参考 ISO/IEC/IEEE 29119 标准转化为测试用例
-
-## Constrains:
-- 所有的测试用例包含测试模块、子模块、前置条件、测试步骤、预期结果
-
-## Workflows:
-你会按下面的框架来编写测试用例
-
-1．**解析需求**:
-	- 提取以下要素：功能点、新增/变更的模块、新增/变更的 UI 元素、输入参数（如“手机号、验证码、第三方登录方式”）、约束条件（如“验证码有效期5分钟”）、预期结果（如“登录成功后跳转首页”）
-2. **生成测试场景**:
-	- 覆盖：正向、逆向、边界值、异常输入、实验分组
-3. **编写测试用例**
-	- 按需编写专门用于 UI 检查的测试用例
-	- 按需编写功能点验证的测试用例
-	- 按需编写性能相关测试用例
-	- 按需添加兼容性相关测试用例
-	- 按需添加实验分组相关的测试用例
-4. **标注优先级**
-    - 优先级：1-4
-    - 1：系统必须使用的功能、购买相关及生效性验证、实验分组、当前需求的核心改动点
-    - 2：产品非核心模块必须使用的功能、核心功能的边界场景
-    - 3：用户使用交互跳转、影响功能使用的 UI、性能、异常场景、文案类检查
-    - 4：非功能性的体验、不影响正常功能使用的 UI、性能、异常场景
-5. **测试用例评审**
-    - 按以下要求进行评审
-        是否覆盖需求上的所有功能点，不违背产品设计
-        测试用例设计的结构安排是否清晰合理，有利于高效覆盖需求
-        用例是否可执行性，且有明确的预期结果，不能是“检查是否有***”，“查看是否返回**”这种形式。
-        优先级安排是否合理
-        每个实验分组最少一个 1 级用例
-        是否对需求文档中涉及到的场景、限制条件、边界情况有充分的独立测试
-        是否从用户层面来设计用户使用的场景和业务流程
-        是否包含充分的异常测试用例
-        是否简洁，不冗余，复用性强
-        返回刷新逻辑，流程流转逻辑的用户体验。
-        关注翻页，重复加载，权限，异常容错措施。
-        关注账号异常，内容审核限制，个人隐私设置处理逻辑。
-    如不符合要求，需及时调整，直至符合要求
-
-
-要求所有测试用例覆盖步骤2的测试场景，且一条测试用例有且只有一个检查点，如果涉及到多个的将多个进行拆分，分别编写输出
-
-## Input
-需求内容如下：
-- **RFC标题**: ${wikiPage.title}
-- **RFC链接**: ${wikiUrl}
-- **文档ID**: ${wikiPage.id}
-
-## Output JSON Format:
-一次性输出所有结果并确保测试用例输出遵循以下JSON数组结构，其中每个对象都包含指定的键和对应的值，不要加任何解释性描述，不要分页一次性返回所有结果。 json: [ { "测试模块": "string value of test module", "子模块": "string value of test submodule", "前置条件": "string value of preconditions", "测试步骤": "string value of test steps", "预期结果": "string value of expected results", "优先级": "1" },...more cases ]
-## 🚀 开始分析：`
+      // 构建分析内容,提取内容要素
+      const analysisContent = [
+        readContentPrompt(wikiPage, wikiUrl),
       ].join('\n');
       return  {
         content: [

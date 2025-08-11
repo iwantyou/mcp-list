@@ -8,7 +8,7 @@
     "build": "pnpm -r build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "postinstall": "pnpm run build:zmc && pnpm run link:zmc",
+    "postinstall": "if ! command -v zmc > /dev/null 2>&1;then pnpm run build:zmc && pnpm run link:zmc;fi",
     "dev:zmc": "tsc -b tsconfig.build.json -w",
     "build:zmc": "tsc -b tsconfig.build.json",
     "link:zmc": "pnpm -C mcp-packages/create-mcp-template link --global",
@@ -24,6 +24,7 @@
     "@modelcontextprotocol/sdk": "^1.16.0",
     "@zh-mcp/create-mcp-template": "workspace:^",
     "cac": "^6.7.14",
+    "dotenv": "^17.2.1",
     "typescript": "^5.9.2",
     "zod": "^3.23.8",
     "zod-to-json-schema": "^3.24.1"

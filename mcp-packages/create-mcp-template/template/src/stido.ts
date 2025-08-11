@@ -5,6 +5,9 @@ import { createLogger } from './logger.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import fs from 'node:fs';
+import { loadEnv } from './utils.js';
+
+loadEnv();
 
 const logger = createLogger('STDIO_SERVER');
 const __dirname = fileURLToPath(new URL('.', import.meta.url));

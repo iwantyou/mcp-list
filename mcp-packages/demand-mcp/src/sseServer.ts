@@ -7,7 +7,11 @@ import assert from 'node:assert';
 import { packageJson } from './package.js';
 import { createMcpServer } from './mcpServer.js';
 import { createLogger } from './logger.js';
+import { loadEnv } from './utils.js';
 
+loadEnv();
+
+const SSE_PATH = process.env.SSE_PATH || '/sse';
 
 const logger = createLogger('SSE_SERVER');
 
@@ -40,7 +44,7 @@ const handleSseRequest = async (req: IncomingMessage, res: ServerResponse, url: 
       sessionMaps.delete(transport.sessionId);
     });
 
-    const transport = new SSEServerTransport('/sse', res);
+    const transport = new SSEServerTransport(SSE_PATH, res);
     sessionMaps.set(transport.sessionId, transport);
     await mcpServer.connect(transport);
   }
@@ -55,7 +59,7 @@ export const startSseServer = async (options: PortAndHostOptions) => {
 
     server.on('request', async (req, res) => {
       const url = new URL(`http://localhost${req.url}`);
-      if (url.pathname.startsWith('/sse'))
+      if (url.pathname.startsWith(SSE_PATH))
         await handleSseRequest(req, res, url, sessionIdMap);
     });
 
@@ -102,7 +106,7 @@ function printServerInfo(address: string | AddressInfo | null) {
       `http://${resolveHost}:${reslovePort}\n`,
       'cursor config: ',
       JSON.stringify({
-        'custome-mcp': `http://${resolveHost}:${reslovePort}/sse`,
+        'custome-mcp': `http://${resolveHost}:${reslovePort}${SSE_PATH}`,
       }, null, 2),
     ].join('');
     logger.info(logInfo);

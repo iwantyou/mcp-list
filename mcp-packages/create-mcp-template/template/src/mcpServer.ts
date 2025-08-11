@@ -3,6 +3,9 @@ import { ListToolsRequestSchema, CallToolRequestSchema } from '@modelcontextprot
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { tools } from './all-tools.js';
 import { createLogger } from './logger.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 async function createMcpServer({ name, version, logger }: { name: string, version: string, logger: ReturnType<typeof createLogger> }) {
   logger.info(`创建 MCP 服务器: ${name} v${version}`);

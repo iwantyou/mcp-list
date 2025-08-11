@@ -6,7 +6,7 @@ const colorInfo = {
   NC: '\x1b[0m',
 };
 
-export const createLogger = (name: string, prefix: string = 'DEMAND-MCP') => {
+export const createLogger = (name: string, prefix: string = process.env.LOGGER_NAME) => {
   return {
     info: (message: string) => console.error(`${colorInfo.GREEN}${prefix} [${name}] ${new Date().toLocaleDateString()}: ${message}${colorInfo.NC}`),
     error: (message: string, error?: any) => console.error(`${colorInfo.RED}${prefix} [${name}] ${new Date().toLocaleDateString()}: ${message} ${JSON.stringify(error) || ''}${colorInfo.NC}`),
