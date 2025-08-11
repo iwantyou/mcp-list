@@ -60,6 +60,8 @@ cli
 
       const HELP_INFO =  [
         COLORINFO.YELLOW,
+        `在根目录 执行 pnpm -F @zh-mcp/${name} dev 进行开发`,
+        `在根目录执行 pnpm -C ${directory}/${name} link --global 进行link`,
         `执行 ${name} 用于启动 stido mcp`,
         `执行 ${name} sse 用于启动 sse mcp`,
         `更多细节执行 ${name} --help`,

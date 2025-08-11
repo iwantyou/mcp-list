@@ -57,7 +57,7 @@ importers:
 
   mcp-packages/create-mcp-template: {}
 
-  mcp-packages/pp:
+  mcp-packages/demand-mcp:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: ^1.16.0
