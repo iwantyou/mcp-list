@@ -23,14 +23,16 @@ const templatePath = resolve(__dirname, '../template');
 interface Options {
   directory: string;
   overwrite: boolean;
+  slient: boolean;
 }
 
 cli
     .option('-d, --directory [directory]', '创建模版的目录 默认为mcp-packages', { default: 'mcp-packages' })
     .option('-o, --overwrite [overwrite]', '是否覆盖已存在的文件', { default: false })
+    .option('-s, --slient [slient]', '是否静默', { default: true })
     .command('<name>', 'create a new mcp server')
     .action(async (name: string, options: Options) => {
-      const { directory, overwrite } = options;
+      const { directory, overwrite, slient } = options;
       const outputDir = resolve(pwd, directory, name);
       await ensureDir(outputDir);
       if (overwrite)
@@ -48,23 +50,24 @@ cli
       fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
       process.chdir(outputDir);
 
-      console.log(`${COLORINFO.CYAN}install...${COLORINFO.NC}`);
+      console.log(`${COLORINFO.CYAN}\ninstall...${COLORINFO.NC}`);
       try {
-        spawnSync('pnpm', ['install'], { stdio: 'inherit' });
+        spawnSync('pnpm', ['install'], { stdio: slient ? 'ignore' : 'inherit' });
       } catch (error) {
         console.log(`${COLORINFO.RED}install failed: ${error}${COLORINFO.NC}`);
         process.exit(1);
       }
-      console.log(`${COLORINFO.GREEN}install done${COLORINFO.NC}`);
+      console.log(`${COLORINFO.GREEN}\ninstall done${COLORINFO.NC}`);
       process.chdir(pwd);
 
       const HELP_INFO =  [
         COLORINFO.YELLOW,
-        `在根目录 执行 pnpm -F @zh-mcp/${name} dev 进行开发`,
-        `在根目录执行 pnpm -C ${directory}/${name} link --global 进行link`,
-        `执行 ${name} 用于启动 stido mcp`,
-        `执行 ${name} sse 用于启动 sse mcp`,
-        `更多细节执行 ${name} --help`,
+        `帮助信息: `,
+        `        在根目录 执行 pnpm -F @zh-mcp/${name} dev 进行开发`,
+        `        在根目录执行 pnpm -C ${directory}/${name} link --global 进行link`,
+        `        执行 ${name} 用于启动 stido mcp`,
+        `        执行 ${name} sse 用于启动 sse mcp`,
+        `        更多细节执行 ${name} --help`,
         COLORINFO.NC,
       ];
 

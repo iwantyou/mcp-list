@@ -31,14 +31,17 @@ export const readContentPrompt = (wikiPage: { title: string, id: string }, wikiU
 ### ⚠️ 约束条件
 [有什么限制、要求或注意事项]
 
+## input
 ## 📄 需求文档信息 根据以下信息提取需求内容
 - **需求标题**: ${wikiPage.title}
 - **需求WIKI链接**: ${wikiUrl}
 - **需求WIKI ID**: ${wikiPage.id}
 
-## 要求
+## output
 - 语言简洁明了，避免冗余
 - 重点突出，便于快速理解
 - 结构清晰，便于后续使用
 
-请根据以上格式提取需求内容：`;
+## 要求
+- 输出内容为markdown格式
+`;
