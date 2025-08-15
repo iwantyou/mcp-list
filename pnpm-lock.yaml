@@ -65,6 +65,9 @@ importers:
       '@modelcontextprotocol/sdk':
         specifier: ^1.16.0
         version: 1.16.0
+      '@zh-mcp/utils':
+        specifier: workspace:^
+        version: link:../../packages/utils
       node-fetch:
         specifier: ^3.3.2
         version: 3.3.2
@@ -81,6 +84,9 @@ importers:
       '@modelcontextprotocol/sdk':
         specifier: ^1.16.0
         version: 1.16.0
+      '@zh-mcp/utils':
+        specifier: workspace:^
+        version: link:../../packages/utils
       node-fetch:
         specifier: ^3.3.2
         version: 3.3.2
@@ -113,6 +119,8 @@ importers:
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/node@24.1.0)
+
+  packages/utils: {}
 
 packages:
 

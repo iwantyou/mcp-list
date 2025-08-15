@@ -9,7 +9,7 @@ import type { AddressInfo } from 'node:net';
 import assert from 'node:assert';
 import { packageJson } from './package.js';
 import { createMcpServer } from './mcpServer.js';
-import { createLogger } from './logger.js';
+import { createLogger, clearScreen } from '@zh-mcp/utils';
 import { bindShortcuts } from './shortcuts.js';
 import type { Socket } from 'node:net';
 import {
@@ -17,7 +17,6 @@ import {
   type ResolvedServerConfig,
   type InlineServerConfig,
 } from './config.js';
-import { clearScreen } from './logger.js';
 
 export interface Server {
   config: ResolvedServerConfig;

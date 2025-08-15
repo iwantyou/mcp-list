@@ -1,6 +1,6 @@
 import type { Server } from './sseServer.js';
 import { printServerInfo } from './sseServer.js';
-import { colorInfo } from './logger.js';
+import { colorInfo } from '@zh-mcp/utils';
 
 export type Shortcut = {
   key: string;

@@ -2,7 +2,7 @@ import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { ListToolsRequestSchema, CallToolRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { tools } from './all-tools.js';
-import { createLogger } from './logger.js';
+import { createLogger } from '@zh-mcp/utils';
 
 async function createMcpServer({ name, version, logger }: { name: string, version: string, logger: ReturnType<typeof createLogger> }) {
   logger.info(`创建 MCP 服务器: ${name} v${version}`);

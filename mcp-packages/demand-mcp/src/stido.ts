@@ -1,6 +1,6 @@
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { createMcpServer } from './mcpServer.js';
-import { createLogger } from './logger.js';
+import { createLogger } from '@zh-mcp/utils';
 
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

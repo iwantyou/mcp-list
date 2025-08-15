@@ -1,0 +1,25 @@
+{
+  "name": "@zh-mcp/utils",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js"
+  },
+  "scripts": {
+    "build": "rimraf dist && tsc",
+    "dev": "tsc -b --watch",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "start": "node cli.js",
+    "clean": "rimraf dist",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

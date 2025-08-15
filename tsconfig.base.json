@@ -6,6 +6,8 @@
     "strict": true,
     "module": "NodeNext",
     "resolveJsonModule": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["node"],
+    "composite": true
   }
 }

@@ -3,7 +3,7 @@ import { createStdioPipe, createServer } from './index.js';
 import { printServerInfo } from './sseServer.js';
 import { packageJson } from './package.js';
 import { bindShortcuts } from './shortcuts.js';
-import { clearScreen } from './logger.js';
+import { clearScreen } from '@zh-mcp/utils';
 
 
 const cli = cac(packageJson.name || 'cli').version(packageJson.version);
