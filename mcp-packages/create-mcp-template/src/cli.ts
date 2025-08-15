@@ -12,9 +12,13 @@ const COLORINFO = {
   CYAN: '\x1b[36m',
   NC: '\x1b[0m',
   YELLOW: '\x1b[33m',
+  BLUE: '\x1b[34m',
+  MAGENTA: '\x1b[35m',
+  BOLD: '\x1b[1m',
+  DIM: '\x1b[2m',
 };
 
-const cli = cac('zm');
+const cli = cac('zmc');
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const pwd = process.cwd();
@@ -34,41 +38,83 @@ cli
     .action(async (name: string, options: Options) => {
       const { directory, overwrite, slient } = options;
       const outputDir = resolve(pwd, directory, name);
-      await ensureDir(outputDir);
-      if (overwrite)
-        emptyDir(outputDir);
-      else
-        copyDir(templatePath, outputDir);
 
-      //  更改package.json中的name
-      const packageJsonPath = resolve(outputDir, 'package.json');
-      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
-      packageJson.name = `@zh-mcp/${name}`;
-      packageJson.bin = {
-        [name]: 'cli.js'
-      };
-      fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-      process.chdir(outputDir);
+      console.log(`${COLORINFO.CYAN}${COLORINFO.BOLD}🚀 开始创建 MCP 项目: ${name}${COLORINFO.NC}`);
+      console.log(`${COLORINFO.DIM}📍 项目路径: ${outputDir}${COLORINFO.NC}\n`);
 
-      console.log(`${COLORINFO.CYAN}\ninstall...${COLORINFO.NC}`);
+      console.log(`${COLORINFO.YELLOW}📁 创建项目目录...${COLORINFO.NC}`);
       try {
-        spawnSync('pnpm', ['install'], { stdio: slient ? 'ignore' : 'inherit' });
+        await ensureDir(outputDir);
+        console.log(`${COLORINFO.GREEN}   ✅ 目录创建完成${COLORINFO.NC}`);
       } catch (error) {
-        console.log(`${COLORINFO.RED}install failed: ${error}${COLORINFO.NC}`);
+        console.log(`${COLORINFO.RED}   ❌ 目录创建失败: ${error}${COLORINFO.NC}`);
         process.exit(1);
       }
-      console.log(`${COLORINFO.GREEN}\ninstall done${COLORINFO.NC}`);
-      process.chdir(pwd);
 
-      const HELP_INFO =  [
-        COLORINFO.YELLOW,
-        `帮助信息: `,
-        `        在根目录 执行 pnpm -F @zh-mcp/${name} dev 进行开发`,
-        `        在根目录执行 pnpm -C ${directory}/${name} link --global 进行link`,
-        `        执行 ${name} 用于启动 stido mcp`,
-        `        执行 ${name} sse 用于启动 sse mcp`,
-        `        更多细节执行 ${name} --help`,
-        COLORINFO.NC,
+      console.log(`${COLORINFO.YELLOW}📋 复制模板文件...${COLORINFO.NC}`);
+      try {
+        if (overwrite) {
+          console.log(`${COLORINFO.DIM}   ⚠️  覆盖已存在的文件${COLORINFO.NC}`);
+          emptyDir(outputDir);
+        }
+        copyDir(templatePath, outputDir);
+        console.log(`${COLORINFO.GREEN}   ✅ 模板文件复制完成${COLORINFO.NC}`);
+      } catch (error) {
+        console.log(`${COLORINFO.RED}   ❌ 模板文件复制失败: ${error}${COLORINFO.NC}`);
+        process.exit(1);
+      }
+
+      console.log(`${COLORINFO.YELLOW}⚙️  配置项目信息...${COLORINFO.NC}`);
+      try {
+        const packageJsonPath = resolve(outputDir, 'package.json');
+        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
+        packageJson.name = `@zh-mcp/${name}`;
+        packageJson.bin = {
+          [name]: 'cli.js'
+        };
+        fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+        console.log(`${COLORINFO.GREEN}   ✅ package.json 配置完成${COLORINFO.NC}`);
+      } catch (error) {
+        console.log(`${COLORINFO.RED}   ❌ package.json 配置失败: ${error}${COLORINFO.NC}`);
+        process.exit(1);
+      }
+
+      process.chdir(outputDir);
+      console.log(`${COLORINFO.YELLOW}📦 安装项目依赖...${COLORINFO.NC}`);
+      try {
+        const installResult = spawnSync('pnpm', ['install'], {
+          stdio: slient ? 'ignore' : 'inherit',
+          shell: true
+        });
+
+        if (installResult.status === 0)
+          console.log(`${COLORINFO.GREEN}   ✅ 依赖安装完成${COLORINFO.NC}`);
+        else
+          throw new Error(`安装失败，退出码: ${installResult.status}`);
+
+      } catch (error) {
+        console.log(`${COLORINFO.RED}   ❌ 依赖安装失败: ${error}${COLORINFO.NC}`);
+        process.exit(1);
+      }
+
+      process.chdir(pwd);
+      console.log(`${COLORINFO.GREEN}${COLORINFO.BOLD}🎉 项目创建完成！${COLORINFO.NC}\n`);
+
+      const HELP_INFO = [
+        '',
+        `${COLORINFO.CYAN}${COLORINFO.BOLD}🎉 项目创建成功！${COLORINFO.NC}`,
+        '',
+        `${COLORINFO.YELLOW}${COLORINFO.BOLD}📋 使用指南${COLORINFO.NC}`,
+        `${COLORINFO.DIM}┌─────────────────────────────────────────────────────────────┐${COLORINFO.NC}`,
+        `${COLORINFO.DIM}│${COLORINFO.NC} ${COLORINFO.GREEN}🚀 开发模式${COLORINFO.NC}${COLORINFO.DIM} │${COLORINFO.NC} pnpm -F @zh-mcp/${name} dev`,
+        `${COLORINFO.DIM}│${COLORINFO.NC} ${COLORINFO.BLUE}🔗 全局链接${COLORINFO.NC}${COLORINFO.DIM} │${COLORINFO.NC} pnpm -C ${directory}/${name} link --global`,
+        `${COLORINFO.DIM}│${COLORINFO.NC} ${COLORINFO.MAGENTA}⚡ 启动服务${COLORINFO.NC}${COLORINFO.DIM} │${COLORINFO.NC} ${name}`,
+        `${COLORINFO.DIM}│${COLORINFO.NC} ${COLORINFO.CYAN}🌐 SSE模式${COLORINFO.NC}${COLORINFO.DIM} │${COLORINFO.NC} ${name} sse`,
+        `${COLORINFO.DIM}│${COLORINFO.NC} ${COLORINFO.YELLOW}❓ 更多帮助${COLORINFO.NC}${COLORINFO.DIM} │${COLORINFO.NC} ${name} --help`,
+        `${COLORINFO.DIM}└─────────────────────────────────────────────────────────────┘${COLORINFO.NC}`,
+        '',
+        `${COLORINFO.DIM}💡 提示: 项目已自动安装依赖，可以直接开始开发！${COLORINFO.NC}`,
+        ''
       ];
 
       console.log(HELP_INFO.join('\n'));
