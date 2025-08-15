@@ -10,5 +10,5 @@
     "tsBuildInfoFile": "./dist/build-info/tsconfig.tsbuildinfo"
   },
   "files": ["src/cli.ts"],
-  "exclude": ["template", "template/**/*", "**/template/**", "**/template"]
+  "exclude": ["template"]
 }

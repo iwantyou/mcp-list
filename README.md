@@ -6,15 +6,17 @@
 
 ```
 mcp-root/
-├── mcp-packages/           # MCP包目录
+├── mcp-packages/           # MCP服务器包目录
+│   └── demand-mcp/         # 知乎需求分析MCP服务器
+├── packages/               # 工具包目录
 │   ├── create-mcp-template/  # MCP模板创建工具
-│   ├── demand-mcp/         # 知乎需求分析MCP服务器
-│   └── test-mcp/           # 测试MCP服务器
-├── packages/               # 共享工具包
 │   └── utils/              # 通用工具库
 ├── package.json            # 根项目配置
 ├── pnpm-workspace.yaml     # pnpm工作区配置
-└── tsconfig.base.json      # TypeScript基础配置
+├── tsconfig.base.json      # TypeScript基础配置
+├── tsconfig.build.json     # TypeScript构建配置
+├── eslint.config.mjs       # ESLint配置
+└── PROJECTS.md             # 项目概览文档
 ```
 
 ## 功能特性
@@ -25,7 +27,7 @@ mcp-root/
 - 🔧 **类型安全**: 完整的TypeScript支持
 - 📊 **需求分析**: 专业的知乎RFC需求分析工具
 - 🧪 **测试用例生成**: 自动生成标准化测试用例
-- 🌍 **多工具支持**: 天气查询、时间工具等实用功能
+- 📝 **日志系统**: 结构化的日志输出和终端工具
 
 ## 子项目
 
@@ -36,6 +38,7 @@ MCP服务器模板创建工具，提供快速创建新MCP项目的功能。
 - 基于模板创建新的MCP服务器项目
 - 自动配置package.json和项目结构
 - 支持自定义目录和覆盖选项
+- 美观的命令行界面和进度提示
 
 **使用方法:**
 ```bash
@@ -51,6 +54,12 @@ zmc my-mcp-server -d custom-directory
 # 覆盖已存在文件
 zmc my-mcp-server -o
 ```
+
+**CLI命令:**
+- `zmc <name>`: 创建新的MCP项目
+- `zmc <name> -d <directory>`: 指定创建目录
+- `zmc <name> -o`: 覆盖已存在的文件
+- `zmc <name> -s false`: 显示详细安装信息
 
 ### 2. demand-mcp
 专业的知乎需求分析MCP服务器，专门用于读取和分析知乎RFC需求文档，并生成标准化的测试用例。
@@ -75,28 +84,18 @@ pnpm start
 node cli.js read "https://one.in.zhihu.com/new-one/rfcs/67986"
 ```
 
-### 3. test-mcp
-优化的MCP服务器，提供多种实用工具。
-
-**主要功能:**
-- 🌤️ **天气查询**: 获取全球任意位置的天气预报
-- ⏰ **时间工具**: 获取当前时间和时区信息
-- 👋 **问候工具**: 简单的问候功能
-- 🔄 **缓存机制**: 天气数据缓存，提高响应速度
-
-**使用方法:**
-```bash
-cd mcp-packages/test-mcp
-pnpm start
-```
-
-### 4. utils
+### 3. utils
 共享工具库，提供通用的开发工具。
 
 **主要功能:**
 - 📝 **日志系统**: 结构化的日志输出，支持颜色和格式化
 - 🎨 **终端工具**: 屏幕清理、颜色输出等终端操作
 - 🔧 **工具函数**: 通用的开发辅助函数
+
+**导出内容:**
+```typescript
+import { createLogger, colorInfo, clearScreen } from '@zh-mcp/utils';
+```
 
 ## 安装和开发
 
@@ -153,6 +152,7 @@ pnpm test
 - 使用严格模式
 - 支持ES模块
 - 统一的编译配置
+- 分离的构建配置
 
 ### ESLint配置
 - TypeScript支持
@@ -183,7 +183,16 @@ HOST=localhost
 ### 开发工具链
 1. 使用`create-mcp-template`快速创建新的MCP项目
 2. 利用`utils`包提供的通用工具
-3. 使用`test-mcp`进行功能测试和验证
+3. 统一的构建和测试流程
+
+## 项目状态
+
+| 项目                | 状态   | 版本   | 描述           |
+| ------------------- | ------ | ------ | -------------- |
+| MCP Root            | ✅ 活跃 | v1.0.0 | 根项目         |
+| create-mcp-template | ✅ 活跃 | v0.0.1 | 模板创建工具   |
+| demand-mcp          | ✅ 活跃 | v0.0.1 | 需求分析服务器 |
+| utils               | ✅ 活跃 | v1.0.0 | 共享工具库     |
 
 ## 许可证
 
@@ -200,13 +209,19 @@ ISC License
 4. 推送到分支
 5. 打开Pull Request
 
+## 相关文档
+
+- [项目概览](./PROJECTS.md) - 详细的项目信息和关系
+- [create-mcp-template](./packages/create-mcp-template/README.md) - 模板创建工具文档
+- [demand-mcp](./mcp-packages/demand-mcp/README.md) - 需求分析服务器文档
+
 ## 更新日志
 
 ### v1.0.0
 - 初始版本
 - 基础项目结构
 - create-mcp-template工具
-- test-mcp服务器
 - demand-mcp需求分析服务器
 - utils共享工具库
-- 完整的开发工具链 
+- 完整的开发工具链
+- 美观的命令行界面 

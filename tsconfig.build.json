@@ -9,7 +9,7 @@
   "include": [],
   "references": [
     {
-      "path": "./mcp-packages/create-mcp-template"
+      "path": "./packages/create-mcp-template"
     }
   ]
 }
