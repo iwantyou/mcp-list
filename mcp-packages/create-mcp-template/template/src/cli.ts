@@ -1,6 +1,10 @@
 import { cac } from 'cac';
-import { createStdioPipe, startSseServer } from './index.js';
+import { createStdioPipe, createServer } from './index.js';
+import { printServerInfo } from './sseServer.js';
 import { packageJson } from './package.js';
+import { bindShortcuts } from './shortcuts.js';
+import { clearScreen } from './logger.js';
+
 
 const cli = cac(packageJson.name || 'cli').version(packageJson.version);
 
@@ -9,6 +13,7 @@ type SseOptions = {
   p?: number;
   port?: number;
   host?: string;
+  ssePath?: string;
 }
 
 cli.command('sse').option('-p, --port <port>', 'port', {
@@ -16,11 +21,16 @@ cli.command('sse').option('-p, --port <port>', 'port', {
 }).option('--host <host>', 'host', {
   default: '0.0.0.0',
 }).action(async (options: SseOptions) => {
-
-  await startSseServer({
-    port: options.port!,
-    host: options.host!,
+  const server = await createServer({
+    port: options.port,
+    host: options.host,
+    ssePath: options.ssePath,
   });
+  await server.start();
+  clearScreen();
+  printServerInfo(server.httpServer.address(), server.config);
+  bindShortcuts(server);
+
 
 });
 

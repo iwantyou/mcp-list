@@ -26,8 +26,8 @@ export async function createStdioPipe() {
     await server.connect(new StdioServerTransport());
 
     logger.info(`MCP 服务器启动成功 - 版本: ${packageJson.version}`);
-  } catch (error) {
-    logger.error('MCP 服务器启动失败', error);
+  } catch (error: any) {
+    logger.error(`MCP 服务器启动失败 ${error.stack}`);
     process.exit(1);
   }
 }

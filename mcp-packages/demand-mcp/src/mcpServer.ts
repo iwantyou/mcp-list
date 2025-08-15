@@ -58,8 +58,8 @@ async function createMcpServer({ name, version, logger }: { name: string, versio
 
       logger.info(`工具 ${toolName} 执行成功`);
       return result;
-    } catch (error) {
-      logger.error(`工具 ${toolName} 执行失败`, error);
+    } catch (error:any) {
+      logger.error(`工具 ${toolName} 执行失败 ${error.stack}`,);
 
       return {
         content: [{
@@ -70,7 +70,6 @@ async function createMcpServer({ name, version, logger }: { name: string, versio
     }
   });
 
-  logger.info(`成功注册 ${tools.length} 个工具`);
   return server;
 }
 
